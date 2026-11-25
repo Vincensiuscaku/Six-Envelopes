@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Enam Amplop Email Keuangan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e4e8e3; --ink:#1c2a28; --muted:#52615e;
+  --paper:#fffef9; --paperink:#25302e; --task:#eef2ee;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#17201e;--ink:#e8ede9;--muted:#9fb0ab;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#17201e;--ink:#e8ede9;--muted:#9fb0ab;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding:40px 20px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;justify-content:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:36px 28px;align-items:end}
+.card{display:flex;flex-direction:column;justify-content:flex-end}
+.env:focus-visible{outline:3px solid #e0a82e;outline-offset:4px}
+
+/* surat */
+.paper-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.3,.7,.2,1);position:relative;z-index:2;margin:0 4%}
+.card.open .paper-wrap{grid-template-rows:1fr}
+.paper{min-height:0;overflow:hidden;background:var(--paper);color:var(--paperink);border-radius:4px 4px 0 0;box-shadow:0 -1px 0 rgba(0,0,0,.05)}
+.inner{padding:22px 22px 44px;font-family:"Newsreader",Georgia,serif;font-size:17px;line-height:1.55}
+.inner .cat{font-family:"Instrument Sans",system-ui,sans-serif;font-weight:600;font-size:13px;color:var(--c);margin:0 0 8px}
+.inner p{margin:0 0 14px}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-family:"Instrument Sans",system-ui,sans-serif;font-size:14px;line-height:1.4;padding:10px 12px;margin:0 0 16px;border:1.5px solid var(--c);border-radius:6px}
+.meta span{color:#5a6764}
+.meta b{font-weight:600}
+.meta i{font-style:normal;display:block;font-size:13px;color:#5a6764;word-break:break-all}
+.inner blockquote{margin:0 0 14px;padding:2px 0 2px 14px;border-left:3px solid var(--c);font-style:italic}
+.task{background:var(--task);border-radius:6px;padding:12px 14px;margin:0!important;font-size:16px}
+.task b{font-family:"Instrument Sans",system-ui,sans-serif;font-size:14px}
+
+/* amplop */
+.env{all:unset;box-sizing:border-box;display:block;position:relative;cursor:pointer;perspective:900px;height:158px;margin-top:0;transition:margin-top .5s cubic-bezier(.3,.7,.2,1)}
+.env:focus-visible{outline:3px solid #e0a82e;outline-offset:4px}
+.card.open .env{margin-top:-30px}
+.body{position:absolute;inset:0;background:var(--d);border-radius:4px;z-index:0}
+.front{position:absolute;inset:0;background:var(--c);border-radius:4px;z-index:3;clip-path:polygon(0 0,50% 56%,100% 0,100% 100%,0 100%);box-shadow:0 6px 14px rgba(0,0,0,.18)}
+.front::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.14),rgba(0,0,0,.1))}
+.flap{position:absolute;left:0;right:0;top:0;height:86px;background:var(--f);z-index:4;transform-origin:top center;clip-path:polygon(0 0,100% 0,50% 100%);transition:transform .5s cubic-bezier(.3,.7,.2,1),background-color .5s,z-index 0s .22s}
+.card.open .flap{transform:rotateX(180deg);background:var(--d);z-index:1}
+.label{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:5;width:78%;background:#fffef9;color:#25302e;border-radius:3px;padding:7px 10px 8px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.label small{display:block;font-size:12px;color:#5a6764}
+.label strong{display:block;font-family:"Newsreader",Georgia,serif;font-size:18px;line-height:1.2}
+@media (prefers-reduced-motion:reduce){.paper-wrap,.env,.flap{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="grid" id="grid"></div>
+</main>
+<script>
+var data=[
+ {n:"01",to:"Administration Team",em:"admin@company.com",t:"The Missing Receipt",k:"Asking for a document",c:"#3d5a80",d:"#2c4260",f:"#4a6a94",
+  s:["The bank record shows a payment of Rp1,250,000 on 18 November. It was for office supplies. But we cannot find the receipt. We need it for our records."],
+  task:"Write a polite email to the Administration Team. Ask for a copy of the receipt. Say why you need it."},
+ {n:"02",to:"Rina, Sales Team",em:"rina@company.com",t:"The Wrong Report",k:"Asking for the correct file",c:"#5f8a6b",d:"#476a51",f:"#6f9a7b",
+  s:["Your team asked for the October sales report. A colleague sent the September report by mistake. You need the October report for the monthly summary."],
+  task:"Politely ask for the correct October report. Explain the problem. Do not blame your colleague."},
+ {n:"03",to:"Budi, Payment Team",em:"budi@company.com",t:"The Angry Message",k:"Making a message polite",c:"#a4473f",d:"#7d332d",f:"#b55a51",
+  q:"“SEND THE PAYMENT REGISTER NOW! YOU ARE LATE!!!”",
+  s:["You need the payment register for a weekly check."],
+  task:"Rewrite this message as a polite email. Keep the same request."},
+ {n:"04",to:"Supplier Accounts Team",em:"accounts@supplier.com",t:"The Missing Details",k:"Asking for information",c:"#b98c1f",d:"#8f6c12",f:"#caa036",
+  s:["A supplier invoice shows Rp3,400,000. But the date and the payment reference number are missing."],
+  task:"Write an email to ask for both missing details. Say that the team needs them to check the records."},
+ {n:"05",to:"Sari, Operations Team",em:"sari@company.com",t:"The Polite Reminder",k:"Sending a polite reminder",c:"#6b5b95",d:"#4e406f",f:"#7c6da6",
+  s:["The October expense report was due on Monday. Today is Wednesday. The finance team has not received it. The monthly summary must be finished by Friday."],
+  task:"Write a polite reminder. Ask for the report by Friday."},
+ {n:"06",to:"Andi, Purchasing Team",em:"andi@company.com",t:"The Thank-You Reply",k:"Saying thank you",c:"#3f7f86",d:"#2d5d63",f:"#4f9098",
+  s:["A colleague sent you the invoice and the receipt. Both documents are complete. The amounts are the same as in your records."],
+  task:"Write a short, polite reply. Say that you received the documents. Thank your colleague."}
+];
+var grid=document.getElementById("grid");
+data.forEach(function(e){
+  var card=document.createElement("div");
+  card.className="card";
+  card.style.cssText="--c:"+e.c+";--d:"+e.d+";--f:"+e.f;
+  var meta='<div class="meta"><span>From</span><b>You, Finance Team</b><span>To</span><div><b>'+e.to+'</b><i>'+e.em+'</i></div></div>';
+  var body=(e.q?"<blockquote>"+e.q+"</blockquote>":"")+e.s.map(function(x){return "<p>"+x+"</p>"}).join("");
+  card.innerHTML=
+   '<div class="paper-wrap"><div class="paper" id="p'+e.n+'" role="region" aria-label="Envelope '+e.n+'"><div class="inner">'+
+   '<p class="cat">'+e.k+'</p>'+meta+body+
+   '<p class="task"><b>Your task:</b> '+e.task+'</p></div></div></div>'+
+   '<button type="button" class="env" aria-expanded="false" aria-controls="p'+e.n+'">'+
+   '<span class="body"></span><span class="flap"></span><span class="front"></span>'+
+   '<span class="label"><small>Envelope '+e.n+'</small><strong>'+e.t+'</strong></span></button>';
+  grid.appendChild(card);
+  var btn=card.querySelector(".env"), paper=card.querySelector(".paper");
+  paper.inert=true;
+  btn.addEventListener("click",function(){
+    var open=!card.classList.contains("open");
+    card.classList.toggle("open",open);
+    btn.setAttribute("aria-expanded",open?"true":"false");
+    paper.inert=!open;
+  });
+});
+</script>
+</body>
+</html>
